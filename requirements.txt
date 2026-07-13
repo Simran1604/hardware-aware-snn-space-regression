@@ -1,0 +1,16 @@
+torch
+torchvision
+spikingjelly
+
+numpy
+pandas
+matplotlib
+Pillow
+opencv-python
+
+scikit-learn
+PyYAML
+tqdm
+
+tensorboard
+jupyter

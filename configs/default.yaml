@@ -1,0 +1,22 @@
+dataset:
+  train_dir: data/raw/train_val
+  train_csv: data/raw/train_val.csv
+
+  test_dir: data/raw/test
+  test_csv: data/raw/test.csv
+
+image:
+
+  height: 256
+  width: 256
+  channels: 3
+
+training:
+
+  batch_size: 1
+  learning_rate: 0.001
+  epochs: 100
+
+model:
+
+  simulation_steps: 6
