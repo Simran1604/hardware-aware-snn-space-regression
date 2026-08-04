@@ -19,4 +19,4 @@ training:
 
 model:
 
-  simulation_steps: 6
+  simulation_steps: 10
