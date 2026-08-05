@@ -5,10 +5,17 @@ sys.path.append(str(Path(__file__).resolve().parents[1] / "src"))
 
 import torch
 
-from snn_space.models.snn import SimpleSNN
+from snn_space.models.snn import SNN
+from snn_space.encoders.direct import DirectEncoder
 
-model = SimpleSNN(
-    simulation_steps=10
+
+encoder = DirectEncoder(
+    num_steps=10,
+)
+
+model = SNN(
+    encoder=encoder,
+    simulation_steps=10,
 )
 
 dummy = torch.rand(
@@ -22,8 +29,4 @@ output = model(dummy)
 
 print(output.shape)
 
-print(output.min())
-
-print(output.max())
-
-print(output.mean())
+print(output)

@@ -1,36 +1,32 @@
 import torch
 
 
-class SurrogateSpike(torch.autograd.Function):
+class ATanSurrogate(torch.autograd.Function):
     """
-    Straight-through surrogate gradient.
-
-    Forward:
-        Hard threshold.
-
-    Backward:
-        Smooth derivative.
+    Arctangent surrogate gradient.
     """
+
+    alpha = 2.0
 
     @staticmethod
-    def forward(ctx, membrane, threshold):
+    def forward(ctx, x):
 
-        ctx.save_for_backward(membrane, threshold)
+        ctx.save_for_backward(x)
 
-        return (membrane >= threshold).float()
+        return (x >= 0).float()
 
     @staticmethod
     def backward(ctx, grad_output):
 
-        membrane, threshold = ctx.saved_tensors
+        (x,) = ctx.saved_tensors
 
-        alpha = 5.0
+        alpha = ATanSurrogate.alpha
 
-        grad = alpha * torch.exp(
-            -alpha * torch.abs(membrane - threshold)
+        grad = alpha / (
+            2 * (1 + (torch.pi * alpha * x / 2).pow(2))
         )
 
-        return grad_output * grad, None
+        return grad_output * grad
 
 
-surrogate_spike = SurrogateSpike.apply
+spike_fn = ATanSurrogate.apply

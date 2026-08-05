@@ -7,45 +7,23 @@ import torch
 
 from snn_space.neurons.plif import PLIFNeuron
 
+torch.manual_seed(0)
+
 neuron = PLIFNeuron()
 
 membrane = torch.zeros(1)
 
-inputs = [
-    0.3,
-    0.4,
-    0.5,
-    0.2,
-    0.6,
-]
+inputs = [0.3, 0.4, 0.5, 0.2, 0.6]
 
 for t, value in enumerate(inputs):
 
     current = torch.tensor([value])
 
-    previous_spike = torch.zeros(1)
-
-for t, value in enumerate(inputs):
-
-    current = torch.tensor([value])
-
-    spike, membrane = neuron(
-        current,
-        membrane,
-        previous_spike,
-    )
-
-    previous_spike = spike
+    spike, membrane = neuron(current, membrane)
 
     print(
-        t,
-        membrane.item(),
-        spike.item()
-    )
-
-    print(
-        f"t={t} "
-        f"input={value:.2f} "
-        f"membrane={membrane.item():.3f} "
+        f"{t:2d} | "
+        f"input={value:.2f} | "
+        f"mem={membrane.item():.4f} | "
         f"spike={spike.item()}"
     )

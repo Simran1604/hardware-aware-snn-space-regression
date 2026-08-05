@@ -1,39 +1,38 @@
 import torch
 import torch.nn as nn
 
-from snn_space.neurons.surrogate import surrogate_spike
+from snn_space.neurons.surrogate import spike_fn
 
 
 class PLIFNeuron(nn.Module):
 
-    def __init__(self, threshold=1.0, beta_init=0.9):
+    def __init__(
+        self,
+        threshold=1.0,
+        init_tau=2.0,
+    ):
         super().__init__()
 
-        self.beta = nn.Parameter(torch.tensor(beta_init))
+        self.threshold = threshold
 
-        self.register_buffer(
-            "threshold",
-            torch.tensor(float(threshold))
+        self.w = nn.Parameter(
+            torch.tensor(init_tau)
         )
 
     def forward(
         self,
         input_current,
         membrane,
-        previous_spike,
     ):
 
-        beta = torch.sigmoid(self.beta)
+        beta = torch.sigmoid(self.w)
 
-        membrane = (
-            beta * membrane
-            + input_current
-            - self.threshold * previous_spike
+        membrane = beta * membrane + input_current
+
+        spikes = spike_fn(
+            membrane - self.threshold
         )
 
-        spike = surrogate_spike(
-            membrane,
-            self.threshold,
-        )
+        membrane = membrane - spikes * self.threshold
 
-        return spike, membrane
+        return spikes, membrane

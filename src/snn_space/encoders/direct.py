@@ -3,32 +3,23 @@ import torch.nn as nn
 
 
 class DirectEncoder(nn.Module):
-    """
-    Direct encoding from the paper.
 
-    The same image is presented at every timestep.
-    """
-
-    def __init__(self, simulation_steps: int):
+    def __init__(self, num_steps):
         super().__init__()
-        self.T = simulation_steps
+        self.num_steps = num_steps
 
     def forward(self, x):
         """
-        Parameters
-        ----------
-        x : Tensor
-            Shape: (B, C, H, W)
+        x : [B,3,H,W]
 
-        Returns
-        -------
-        Tensor
-            Shape: (T, B, C, H, W)
+        returns
+
+        [B,T,3,H,W]
         """
 
-        return x.unsqueeze(0).repeat(
-            self.T,
+        return x.unsqueeze(1).repeat(
             1,
+            self.num_steps,
             1,
             1,
             1,
